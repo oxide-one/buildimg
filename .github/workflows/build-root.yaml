@@ -1,0 +1,61 @@
+name: Build image
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '48 12 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  # Alpine version
+  ALPINE_VERSION: 3.15
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    container:
+      image: "docker.io/library/alpine:${{ env.ALPINE_VERSION }}"
+    steps:
+      - name: "Add NodeJS"
+        run: "apk add --no-cache nodejs"
+    
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: /repo
+
+      - name: "Clone the Abuild tree"
+        uses: actions/checkout@v2
+        with:
+          repository:  "alpinelinux/aports"
+
+          path: /aports
+
+      - name: "Update the alpine package index"
+        run: "apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot syslinux xorriso mtools dosfstools grub-efi make git sudo"
+      
+      - name: "Clone the Abuild tree"
+        uses: actions/checkout@v3
+        with:
+          repository:  "http://git.alpinelinux.org/cgit/aports/"
+          fetch-depth: 1
+          path: /aports
+
