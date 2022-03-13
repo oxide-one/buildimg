@@ -22,6 +22,11 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   # Alpine version
   ALPINE_VERSION: 3.15
+  env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
+    BUCKET_NAME: ${{ secrts.BUCKET_NAME }}
 
 
 jobs:
