@@ -33,7 +33,7 @@ jobs:
       image: "docker.io/library/alpine:3.15"
     steps:
       - name: "Add NodeJS"
-        run: "apk add --update --no-cache nodejs npm git"
+        run: "apk add --update --no-cache nodejs npm git bash"
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -64,6 +64,7 @@ jobs:
 
       - name: "Upload the artifacts to an S3 bucket"
         run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /ipxe s3://${{ secrets.BUCKET_NAME }}/ipxe/ --recursive --acl public-read"
+        shell: bash
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -77,13 +78,13 @@ jobs:
       image: "docker.io/library/alpine:3.15"
     steps:
       - name: "Add NodeJS"
-        run: "apk add --update --no-cache nodejs npm git"
+        run: "apk add --update --no-cache nodejs npm git bashdd"
 
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: "Update the alpine package index"
-        run: "apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev"
+        run: "apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev bash"
       
       - name: "Generate a directory for each arch"
         run: mkdir -p /build/{x86_64,aarch64}
@@ -106,6 +107,7 @@ jobs:
 
       - name: "Upload the artifacts to an S3 bucket"
         run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /build s3://${{ secrets.BUCKET_NAME }} --recursive --acl public-read"
+        shell: bash
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
