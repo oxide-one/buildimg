@@ -25,12 +25,10 @@ env:
 
 
 jobs:
-  build:
-
+  ipxe:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     container:
       image: "docker.io/library/alpine:3.15"
     steps:
@@ -40,16 +38,67 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: "Run git clone manually"
-        run: "git clone https://github.com/alpinelinux/aports.git --depth 1"
-
-      - run: "echo $PWD"
-      - run: "ls aports"
-      
       - name: "Update the alpine package index"
-        run: "apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot syslinux xorriso mtools dosfstools grub-efi make git sudo"
+        run: "apk add alpine-sdk xz-dev perl"
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/ipxe
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/pipxe
+
+      - name: "Install python-pip"
+        run: "apk add --no-cache python3 py-pip"
+
+      - name: "Install awscli"
+        run: "pip install awscli"
+
+      - name: "Build IPXE"
+        run: "cd ipxe/src && make -j$(nproc) bin-x86_64-efi/ipxe.efi bin/undionly.kpxe"
+
+      - name: "Make an IPXE directory"
+        run: "mkdir -p /ipxe"
+
+      - name: "Move the files over"
+        run: "cp ipxe/src/bin-x86_64-efi/ipxe.efi ipxe/src/bin/undionly.kpxe /ipxe"
+
+      - name: "Upload the artifacts to an S3 bucket"
+        run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /ipxe s3://$BUCKET_NAME/ipxe/ --recursive --acl public-read"
+
+  kernel:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: "docker.io/library/alpine:3.15"
+    steps:
+      - name: "Add NodeJS"
+        run: "apk add --update --no-cache nodejs npm git"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: "Update the alpine package index"
+        run: "apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev"
       
+      - name: "Generate a directory for each arch"
+        run: mkdir -p /build/{x86_64,aarch64}
+      
+      - name: "Generate a initramfs kernel image for x86_64 images"
+        run: >-
+          update-kernel
+          --media 
+          --flavor lts 
+          --arch x86_64 
+          --repositories-file /etc/apk/repositories 
+          -F "base squashfs network dhcp https"
+          /build/x86_64
 
- 
-          
+      - name: "Install python-pip"
+        run: "apk add --no-cache python3 py-pip"
 
+      - name: "Install awscli"
+        run: "pip install awscli"
+
+      - name: "Upload the artifacts to an S3 bucket"
+        run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /build s3://$BUCKET_NAME --recursive --acl public-read"
