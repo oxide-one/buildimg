@@ -22,11 +22,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   # Alpine version
   ALPINE_VERSION: 3.15
-  env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
-    BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
 
 
 jobs:
@@ -69,7 +64,12 @@ jobs:
 
       - name: "Upload the artifacts to an S3 bucket"
         run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /ipxe s3://$BUCKET_NAME/ipxe/ --recursive --acl public-read"
-
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        
   kernel:
     runs-on: ubuntu-latest
     permissions:
@@ -107,3 +107,8 @@ jobs:
 
       - name: "Upload the artifacts to an S3 bucket"
         run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /build s3://$BUCKET_NAME --recursive --acl public-read"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
