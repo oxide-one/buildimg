@@ -69,6 +69,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: "Move the files over"
+        run: "cp loader.ipxe ipxe/src"
+
       - name: "Build IPXE with custom files"
         run: "cd ipxe/src && make -j$(nproc) bin-x86_64-efi/ipxe.efi bin/undionly.kpxe EMBED=loader.ipxe"
 
