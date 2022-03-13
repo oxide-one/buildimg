@@ -69,6 +69,22 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: "Build IPXE with custom files"
+        run: "cd ipxe/src && make -j$(nproc) bin-x86_64-efi/ipxe.efi bin/undionly.kpxe EMBED=loader.ipxe"
+
+      - name: "Make an IPXE-custom directory"
+        run: "mkdir -p /ipxe-custom"
+
+      - name: "Move the files over"
+        run: "cp ipxe/src/bin-x86_64-efi/ipxe.efi ipxe/src/bin/undionly.kpxe /ipxe-custom"
+
+      - name: "Upload the artifacts to an S3 bucket"
+        run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /ipxe-custom s3://${{ secrets.BUCKET_NAME }}/ipxe-custom/ --recursive --acl public-read"
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
         
   kernel:
     runs-on: ubuntu-latest
