@@ -63,12 +63,11 @@ jobs:
         run: "cp ipxe/src/bin-x86_64-efi/ipxe.efi ipxe/src/bin/undionly.kpxe /ipxe"
 
       - name: "Upload the artifacts to an S3 bucket"
-        run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /ipxe s3://$BUCKET_NAME/ipxe/ --recursive --acl public-read"
+        run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /ipxe s3://${{ secrets.BUCKET_NAME }}/ipxe/ --recursive --acl public-read"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+
         
   kernel:
     runs-on: ubuntu-latest
@@ -106,9 +105,7 @@ jobs:
         run: "pip install awscli"
 
       - name: "Upload the artifacts to an S3 bucket"
-        run: "aws s3 --endpoint=https://$BUCKET_ENDPOINT cp /build s3://$BUCKET_NAME --recursive --acl public-read"
+        run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /build s3://${{ secrets.BUCKET_NAME }} --recursive --acl public-read"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
