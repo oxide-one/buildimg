@@ -78,7 +78,7 @@ jobs:
       image: "docker.io/library/alpine:3.15"
     steps:
       - name: "Add NodeJS"
-        run: "apk add --update --no-cache nodejs npm git bashdd"
+        run: "apk add --update --no-cache nodejs npm git bash"
 
       - name: Checkout repository
         uses: actions/checkout@v3
