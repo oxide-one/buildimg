@@ -125,7 +125,17 @@ jobs:
           --repositories-file /etc/apk/repositories 
           -F "base squashfs network dhcp https"
           /build/x86_64
-
+          
+      - name: "Generate a initramfs kernel image for ARM 64 images"
+        run: >-
+          update-kernel
+          --media 
+          --flavor lts 
+          --arch aarch64 
+          --repositories-file /etc/apk/repositories 
+          -F "base squashfs network dhcp https"
+          /build/aarch64
+          
       - name: "Install python-pip"
         run: "apk add --no-cache python3 py-pip"
 
