@@ -20,14 +20,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  # Alpine version
-  ALPINE_VERSION: 3.15
-  # Docker URl for alpine
-  ALPINE_DOCKER_URL: docker.io/library/alpine:${{ env.ALPINE_VERSION }}
-  # Alpine flavor
-  ALPINE_FLAVOR: lts
-  # Alpine features
-  ALPINE_FEATURES: "base squashfs network dhcp https"
+ 
 
 jobs:
   build:
