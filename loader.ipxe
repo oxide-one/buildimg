@@ -1,5 +1,0 @@
-  #!ipxe
-  
-  dhcp
-  chain http://${BUCKET_ENDPOINT}/ipxe-custom/boot.ipxe
-  
