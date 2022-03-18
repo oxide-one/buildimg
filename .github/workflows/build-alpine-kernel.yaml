@@ -1,4 +1,4 @@
-name: Build image
+name: Alpine Linux
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -46,7 +46,7 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build X86_64 initramfs
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -62,7 +62,7 @@ jobs:
             build
           tags: alpine-kernel
 
-      - name: Build and push Docker image
+      - name: Build Raspberry PI initramfs
         uses: docker/build-push-action@v2
         with:
           context: .
