@@ -23,7 +23,7 @@ env:
  
 
 jobs:
-  build:
+  build-x86_64:
 
     runs-on: ubuntu-latest
     permissions:
@@ -62,7 +62,40 @@ jobs:
             build
           tags: alpine-kernel
 
-      - name: Build Raspberry PI initramfs
+      - name: "Upload x86_64 assets to S3"
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
+          SOURCE_DIR: 'build/x86_64/boot'
+          DEST_DIR: 'x86_64'
+
+  build-aarch64:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Setup QEMU static args
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Build Aarch64 initramfs
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -77,18 +110,6 @@ jobs:
           outputs: |
             build
           tags: alpine-kernel
-
-      - name: "Upload x86_64 assets to S3"
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
-          SOURCE_DIR: 'build/x86_64/boot'
-          DEST_DIR: 'x86_64'
 
       - name: "Upload aarch64 assets to S3"
         uses: jakejarvis/s3-sync-action@master
