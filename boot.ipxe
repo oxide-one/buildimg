@@ -11,7 +11,7 @@ cpuid --ext 29 && goto x86_64 || goto x86
 set arch aarch64 ||
 set acpi acpi=force ||
 set console ttyAMA0 ||
-set flavor rpi
+set flavor rpi4
 goto run
 
 :x86_64

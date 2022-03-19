@@ -54,7 +54,7 @@ jobs:
           build-args: |
             alpine_version=3.15
             alpine_docker_url=docker.io/library/alpine:3.15
-            alpine_flavor=lts
+            alpine_flavor="lts virt"
             alpine_features="base squashfs network dhcp https"
           #platforms: linux/amd64,linux/arm64,linux/ppc64le
           platforms: linux/amd64
@@ -70,7 +70,7 @@ jobs:
           build-args: |
             alpine_version=3.15
             alpine_docker_url=docker.io/library/alpine:3.15
-            alpine_flavor=rpi
+            alpine_flavor="rpi lts virt rpi4"
             alpine_features="base squashfs network dhcp https"
           #platforms: linux/amd64,linux/arm64,linux/ppc64le
           platforms: linux/arm64
@@ -101,3 +101,54 @@ jobs:
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
           SOURCE_DIR: 'build/aarch64/boot'
           DEST_DIR: 'aarch64'
+
+  ipxe:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: "docker.io/library/alpine:3.15"
+    steps:
+      - name: "Add NodeJS"
+        run: "apk add --update --no-cache nodejs npm git bash"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: "Update the alpine package index"
+        run: "apk add alpine-sdk xz-dev perl"
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/ipxe
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/pipxe
+
+      - name: "Install python-pip"
+        run: "apk add --no-cache python3 py-pip"
+
+      - name: "Install awscli"
+        run: "pip install awscli"
+
+      - name: "Build IPXE"
+        run: "cd ipxe/src && make -j$(nproc) bin-x86_64-efi/ipxe.efi bin/undionly.kpxe"
+
+      - name: "Make an IPXE directory"
+        run: "mkdir -p /ipxe"
+
+      - name: "Move the files over"
+        run: "cp ipxe/src/bin-x86_64-efi/ipxe.efi ipxe/src/bin/undionly.kpxe /ipxe"
+
+      - name: "Upload the artifacts to an S3 bucket"
+        run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /ipxe s3://${{ secrets.BUCKET_NAME }}/ipxe/ --recursive --acl public-read"
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: "Add the testing repo so we can download envsubst"
+        run: "echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories"
+
+      - name: "Add envsubst"
+        run: "apk add envsubst"
+

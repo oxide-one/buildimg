@@ -20,14 +20,11 @@ RUN apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev
 RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/main\nhttps://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/community" > /tmp/repositories
 
 RUN cat /tmp/repositories
+
+COPY build.sh .
 # Build the kernel
-RUN update-kernel \
-          --media \
-          --flavor "$alpine_flavor" \
-          --arch "$(cat /etc/apk/arch)" \
-          -F "${alpine_features}" \
-          --repositories-file /tmp/repositories \
-          /build/$(cat /etc/apk/arch)
+RUN sh build.sh "$alpine_flavor" "$alpine_features"
+	 
 
 FROM scratch
 
