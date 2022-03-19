@@ -23,7 +23,7 @@ RUN cat /tmp/repositories
 
 COPY build.sh .
 # Build the kernel
-RUN sh build.sh ${alpine_flavor} ${alpine_features}
+RUN sh build.sh "${alpine_flavor}" "${alpine_features}"
 	 
 
 FROM scratch
