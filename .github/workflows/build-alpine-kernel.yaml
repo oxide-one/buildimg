@@ -25,7 +25,7 @@ env:
 jobs:
   build-x86_64:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -76,7 +76,7 @@ jobs:
 
   build-aarch64:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -125,7 +125,7 @@ jobs:
 
   ipxe:
     if: ${{ false }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     container:
