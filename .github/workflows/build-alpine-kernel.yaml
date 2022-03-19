@@ -103,6 +103,7 @@ jobs:
           DEST_DIR: 'aarch64'
 
   ipxe:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
