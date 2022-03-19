@@ -22,6 +22,7 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/main\nhttp
 RUN cat /tmp/repositories
 
 COPY build.sh .
+COPY features/rpi.modules /etc/mkinitfs/features.d/rpi.modules
 # Build the kernel
 RUN sh build.sh "${alpine_flavor}" "${alpine_features}"
 	 

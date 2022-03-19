@@ -11,6 +11,8 @@ cpuid --ext 29 && goto x86_64 || goto x86
 set arch aarch64 ||
 set acpi acpi=force ||
 set console ttyAMA0 ||
+set ipaddr ip=dhcp ||
+set cmdline ${acpi} ${console} ${ipaddr}
 set flavor rpi4
 goto run
 
@@ -48,6 +50,6 @@ set vmlinuz-url     ${img-url}/${arch}/vmlinuz-${flavor}
  echo WELCOME TO OXIDE ONE
 
 imgfree
-kernel ${vmlinuz-url} ip=:::::eth0:dhcp alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor}
+kernel ${vmlinuz-url} alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor}
 initrd ${initramfs-url}
 boot

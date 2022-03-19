@@ -55,7 +55,7 @@ jobs:
             alpine_version=3.15
             alpine_docker_url=docker.io/library/alpine:3.15
             alpine_flavor=lts virt
-            alpine_features=base squashfs network dhcp https
+            alpine_features=rpi base squashfs network dhcp https
           #platforms: linux/amd64,linux/arm64,linux/ppc64le
           platforms: linux/amd64
           outputs: |
