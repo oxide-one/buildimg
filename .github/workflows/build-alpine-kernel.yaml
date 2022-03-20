@@ -144,7 +144,7 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@master
 
-      - name: Build Aarch64 initramfs
+      - name: Download Raspberry Pi Bootloader stuff
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -157,7 +157,7 @@ jobs:
             build
           tags: alpine-kernel
 
-      - name: "Upload aarch64 assets to S3"
+      - name: "Upload Raspberry Pi assets to S3"
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
@@ -166,7 +166,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
-          SOURCE_DIR: 'build/aarch64/boot'
+          SOURCE_DIR: 'build/boot'
           DEST_DIR: 'aarch64/raspberrypi'
 
 
