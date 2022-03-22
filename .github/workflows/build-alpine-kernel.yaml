@@ -24,7 +24,6 @@ env:
 
 jobs:
   build-x86_64:
-    if: ${{ false }}
     runs-on: self-hosted
     permissions:
       contents: read
@@ -75,7 +74,6 @@ jobs:
           DEST_DIR: 'x86_64'
 
   build-aarch64:
-    if: ${{ false }}
     runs-on: self-hosted
     permissions:
       contents: read
@@ -167,11 +165,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
           SOURCE_DIR: 'build/'
-          DEST_DIR: 'raspberrypi'
+          DEST_DIR: 'aarch64/raspberrypi'
 
 
   ipxe:
-    if: ${{ false }}
     runs-on: self-hosted
     permissions:
       contents: read
