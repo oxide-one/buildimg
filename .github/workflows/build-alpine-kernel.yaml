@@ -20,7 +20,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
- 
+  
 
 jobs:
   build-x86_64:
@@ -62,7 +62,7 @@ jobs:
           tags: alpine-kernel
 
       - name: "Upload x86_64 assets to S3"
-        uses: jakejarvis/s3-sync-action@master
+        uses: oxide-one/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
@@ -110,7 +110,7 @@ jobs:
           tags: alpine-kernel
 
       - name: "Upload aarch64 assets to S3"
-        uses: jakejarvis/s3-sync-action@master
+        uses: oxide-one/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
@@ -156,7 +156,7 @@ jobs:
           tags: alpine-kernel
 
       - name: "Upload Raspberry Pi assets to S3"
-        uses: jakejarvis/s3-sync-action@master
+        uses: oxide-one/s3-sync-action@master
         with:
           args: --acl public-read --delete
         env:
@@ -165,7 +165,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
           SOURCE_DIR: 'build/'
-          DEST_DIR: 'aarch64/raspberrypi'
+          DEST_DIR: 'aarch64/'
 
 
   ipxe:

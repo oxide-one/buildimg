@@ -9,6 +9,7 @@ RUN apk add linux-rpi4 raspberrypi-bootloader
 
 RUN rm /boot/vmlinuz-*
 RUN rm /boot/initramfs-*
+RUN rm /boot/config-*
 # Good lord I fucked up before
 RUN unlink /boot/boot
 
