@@ -1,7 +1,8 @@
 echo "Features: $2"
 echo "Flavors: $1"
 for flavor in $1; do
-echo "#### BUILDING FLAVOR $flavor ####"	
+echo "#### BUILDING FLAVOR $flavor ####"
+export MKINITFS_ARGS="-i $PWD/initramfs-init"
 update-kernel \
           --media \
           --flavor "$flavor" \

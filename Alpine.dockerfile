@@ -20,7 +20,8 @@ RUN apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev
 RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/main\nhttps://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/community" > /tmp/repositories
 
 RUN cat /tmp/repositories
-
+COPY oxide-one-textonly.ppm /
+COPY initramfs-init .
 COPY build.sh .
 COPY features/rpi.modules /etc/mkinitfs/features.d/rpi.modules
 # Build the kernel
