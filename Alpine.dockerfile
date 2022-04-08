@@ -23,7 +23,6 @@ RUN cat /tmp/repositories
 COPY initramfs-init /usr/share/mkinitfs/initramfs-init
 COPY build.sh .
 COPY features/* /etc/mkinitfs/features.d/
-RUN cat /etc/mkinitfs/features.d/splash.files
 # Build the kernel
 RUN sh build.sh "${alpine_flavor}" "${alpine_features}"
 	
