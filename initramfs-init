@@ -373,7 +373,8 @@ done
 
 echo "Alpine Init $VERSION" > /dev/kmsg
 [ "$KOPT_quiet" = yes ] || echo "Alpine Init $VERSION"
-
+echo "Welcome to Gecko."
+echo "No warranty, no life. All lizard."
 # enable debugging if requested
 [ -n "$KOPT_debug_init" ] && set -x
 
@@ -678,7 +679,7 @@ if [ "$KOPT_splash" != "no" ]; then
 	for fbdev in /dev/fb[0-9]; do
 		[ -e "$fbdev" ] || break
 		num="${fbdev#/dev/fb}"
-		fbsplash -s "/oxide-one-textonly.ppm" -d "$fbdev" -i "$config"
+		fbsplash -s "/etc/fbcom.ppm" -d "$fbdev" -i "$config"
 	done
 	for fbsplash in /media/*/fbsplash.ppm; do
 		[ -e "$fbsplash" ] && break

@@ -15,19 +15,19 @@ RUN mkdir -p /build/$(cat /etc/apk/arch)
 RUN apk update
 
 # Download dependencies
-RUN apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev
+RUN apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev mkinitfs
 
 RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/main\nhttps://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/community" > /tmp/repositories
 
 RUN cat /tmp/repositories
-COPY oxide-one-textonly.ppm /
-COPY initramfs-init .
+COPY initramfs-init /usr/share/mkinitfs/initramfs-init
 COPY build.sh .
-COPY features/rpi.modules /etc/mkinitfs/features.d/rpi.modules
+COPY features/* /etc/mkinitfs/features.d/
+RUN cat /etc/mkinitfs/features.d/splash.files
 # Build the kernel
 RUN sh build.sh "${alpine_flavor}" "${alpine_features}"
-	 
-
+	
+RUN ls /build
 FROM scratch
 
 COPY --from=build /build /
