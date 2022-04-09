@@ -12,6 +12,8 @@ WORKDIR /ipxe
 RUN apt update
 RUN apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu make
 
+RUN ;s ipxe/src/*/*.efi
+
 RUN make -j$(nproc) -C ipxe/src CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi
 RUN make -j$(nproc) -C ipxe/src bin-x86_64-efi/ipxe.efi
 
