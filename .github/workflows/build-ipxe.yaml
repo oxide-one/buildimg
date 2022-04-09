@@ -39,10 +39,6 @@ jobs:
           repository: 'ipxe/ipxe'
           path: ipxe
       # Setup QEMU static args
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@master
-        with:
-          platforms: all
 
       - name: Set up Docker Buildx
         id: buildx
@@ -53,9 +49,6 @@ jobs:
         with:
           context: .
           file: ipxe.dockerfile
-          build-args: |
-            PACKAGES=mtools syslinux isolinux
-            TARGETS=bin/ipxe.efi
           platforms: linux/amd64
           outputs: |
             build
