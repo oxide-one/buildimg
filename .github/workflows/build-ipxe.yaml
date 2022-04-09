@@ -1,0 +1,136 @@
+name: Alpine Linux
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '48 12 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  
+
+jobs:
+
+  build-aarch64:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setup QEMU static args
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Build Aarch64 IPXE
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ipxe.dockerfile
+          build-args: |
+            PACKAGES=mtools syslinux isolinux gcc-aarch64-linux-gnu
+            CROSS=aarch64-linux-gnu-
+            TARGETS=bin-arm64-efi/ipxe.efi
+          platforms: linux/arm64
+          outputs: |
+            build
+          tags: ipxe-arm64
+
+      - name: Build AMD64 IPXE
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ipxe.dockerfile
+          build-args: |
+            PACKAGES=mtools syslinux isolinux
+            TARGETS=bin/ipxe.efi
+          platforms: linux/amd64
+          outputs: |
+            build
+          tags: ipxe-amd64
+
+      - name: "Upload aarch64 assets to S3"
+        uses: oxide-one/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks 
+        env:
+          AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
+          SOURCE_DIR: 'build/'
+          DEST_DIR: 'ipxe'
+
+  ipxe:
+    if: ${ false }
+    runs-on: self-hosted
+    permissions:
+      contents: read
+    container:
+      image: "docker.io/library/alpine:3.15"
+    steps:
+      - name: "Add NodeJS"
+        run: "apk add --update --no-cache nodejs npm git bash"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: "Update the alpine package index"
+        run: "apk add alpine-sdk xz-dev perl"
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/ipxe
+
+      - name: "Checkout iPXE for Raspberry PI"
+        run: git clone https://github.com/ipxe/pipxe
+
+      - name: "Install python-pip"
+        run: "apk add --no-cache python3 py-pip"
+
+      - name: "Install awscli"
+        run: "pip install awscli"
+
+      - name: "Build IPXE"
+        run: "cd ipxe/src && make -j$(nproc) bin-x86_64-efi/ipxe.efi bin/undionly.kpxe"
+
+      - name: "Make an IPXE directory"
+        run: "mkdir -p /ipxe"
+
+      - name: "Move the files over"
+        run: "cp ipxe/src/bin-x86_64-efi/ipxe.efi ipxe/src/bin/undionly.kpxe /ipxe"
+
+      - name: "Upload the artifacts to an S3 bucket"
+        run: "aws s3 --endpoint=https://${{ secrets.BUCKET_ENDPOINT }} cp /ipxe s3://${{ secrets.BUCKET_NAME }}/ipxe/ --recursive --acl public-read"
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: "Add the testing repo so we can download envsubst"
+        run: "echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories"
+
+      - name: "Add envsubst"
+        run: "apk add envsubst"
+
