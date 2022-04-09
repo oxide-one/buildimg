@@ -49,10 +49,9 @@ jobs:
         with:
           context: .
           file: ipxe.dockerfile
-          platforms: linux/amd64
           outputs: |
             build
-          tags: ipxe-amd64
+          tags: ipxe
 
       - name: "Upload aarch64 assets to S3"
         uses: oxide-one/s3-sync-action@master
