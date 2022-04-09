@@ -4,7 +4,8 @@ ARG CROSS
 ARG TARGETS
 RUN mkdir /build
 COPY boot.ipxe .
-COPY ipxe .
+COPY ipxe /ipxe
+WORKDIR /ipxe
 RUN apt update
 RUN apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu
 RUN make -j$(nproc) -C ipxe/src CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi
