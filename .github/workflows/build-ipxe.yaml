@@ -84,7 +84,7 @@ jobs:
           DEST_DIR: 'ipxe'
 
   ipxe:
-    if: ${ false }
+    if: false
     runs-on: self-hosted
     permissions:
       contents: read
