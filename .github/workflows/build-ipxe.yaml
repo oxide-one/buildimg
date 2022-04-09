@@ -1,4 +1,4 @@
-name: Alpine Linux
+name: IPXE
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -24,7 +24,7 @@ env:
 
 jobs:
 
-  build-aarch64:
+  build-ipxe:
     runs-on: self-hosted
     permissions:
       contents: read
@@ -33,7 +33,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'ipxe/ipxe'
+          path: ipxe
       # Setup QEMU static args
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
