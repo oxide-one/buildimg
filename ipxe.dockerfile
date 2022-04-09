@@ -1,4 +1,4 @@
-FROM ubuntu-20.04 AS build
+FROM ubuntu:20.04 AS build
 ARG PACKAGES
 ARG CROSS
 ARG TARGETS
