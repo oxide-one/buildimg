@@ -43,7 +43,7 @@ jobs:
         run: sudo apt update
         
       - name: Download tools
-        run: sudo apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu mak
+        run: sudo apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu make
         
       - name: Compile ipxe for ARM
         run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi 
