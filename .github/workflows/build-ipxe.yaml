@@ -47,11 +47,11 @@ jobs:
         
       - name: Compile ipxe for ARM
         run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi 
-        working-directory: ./ipxe
+        #working-directory: ./ipxe
         
       - name: Compile ipxe for ARM
         run: make -j$(nproc) -C ipxe/src  bin-x86_64-efi/ipxe.efi 
-        working-directory: ./ipxe
+        #working-directory: ./ipxe
         
       - name: Move IPXE Resources
         run: |
