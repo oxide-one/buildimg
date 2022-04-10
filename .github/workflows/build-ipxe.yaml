@@ -38,6 +38,7 @@ jobs:
         with:
           repository: 'ipxe/ipxe'
           path: ipxe
+          fetch-depth: '0'
       # Setup QEMU static args
       - name: Update APT Caches
         run: sudo apt update
