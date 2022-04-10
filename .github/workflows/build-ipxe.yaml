@@ -49,6 +49,7 @@ jobs:
         with:
           context: .
           file: ipxe.dockerfile
+          no-cache: true
           outputs: |
             build
           tags: ipxe
