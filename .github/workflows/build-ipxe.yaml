@@ -47,17 +47,17 @@ jobs:
         run: sudo apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu make
         
       - name: Compile ipxe for ARM
-        run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi 
+        run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/boot.ipxe
         #working-directory: ./ipxe
         
       - name: Compile ipxe for ARM
-        run: make -j$(nproc) -C ipxe/src  bin-x86_64-efi/ipxe.efi 
+        run: make -j$(nproc) -C ipxe/src  bin-x86_64-efi/ipxe.efi EMBED=myscript.ipxe EMBED=$PWD/boot.ipxe
         #working-directory: ./ipxe
         
       - name: Move IPXE Resources
         run: |
           mkdir out
-          cp ipxe/src/bin-x86_64-efi/ipxe.efi   out/ipxe-x86_64.efi
+          cp ipxe/src/bin-x86_64-efi/ipxe.efi   out/ipxe-x86_64.efi 
           cp ipxe/src/bin-arm64-efi/ipxe.efi    out/ipxe-aarch64.efi
 
       - name: "Upload aarch64 assets to S3"
