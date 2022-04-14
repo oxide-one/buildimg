@@ -20,7 +20,7 @@ jobs:
     name: Spin up Droplet
     uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
     with:
-      name: droplet-${{ github.run_id }}-${{ github.run_number }}
+      name: gha-${{ github.run_id }}-${{ github.run_number }}
     secrets:
       access-token: ${{ secrets.GITHUB_TOKEN }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
