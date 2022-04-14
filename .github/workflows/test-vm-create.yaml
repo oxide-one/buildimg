@@ -21,3 +21,13 @@ jobs:
     secrets:
       access-token: ${{ secrets.GH_PAT }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
+      
+  tear-down-droplet:
+    needs: spin-up-droplet
+    name: Spin up Droplet
+    uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
+    with:
+      name: gha-${{ github.run_id }}-${{ github.run_number }}
+    secrets:
+      access-token: ${{ secrets.GH_PAT }}
+      do-access-token: ${{ secrets.DO_ACCESS_KEY }}
