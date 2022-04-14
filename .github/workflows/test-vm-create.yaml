@@ -26,7 +26,7 @@ jobs:
   call-workflow-passing-data:
     uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
     with:
-      name: ${{ env.GITHUB_RUN_ID }}
+      name: test
     secrets:
       access-token: ${{ secrets.GITHUB_TOKEN }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
