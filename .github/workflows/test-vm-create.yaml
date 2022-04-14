@@ -1,0 +1,32 @@
+name: IPXE
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '48 12 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+
+jobs:
+  call-workflow-passing-data:
+    uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
+    with:
+      name: ${{ format('gha-worker-{0}'), env.GITHUB_RUN_ID }}
+    secrets:
+      access-token: ${{ secrets.GITHUB_TOKEN }}
+      do-access-token: ${{ secrets.DO_ACCESS_KEY }}
