@@ -1,0 +1,74 @@
+name: IPXE
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '48 12 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  
+
+jobs:
+
+  build-ipxe:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'ipxe/ipxe'
+          path: ipxe
+          fetch-depth: '0'
+      # Setup QEMU static args
+      - name: Update APT Caches
+        run: sudo apt update
+        
+      - name: Download tools
+        run: sudo apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu make
+        
+      - name: Compile ipxe for ARM
+        run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/boot.ipxe
+        #working-directory: ./ipxe
+        
+      - name: Compile ipxe for ARM
+        run: make -j$(nproc) -C ipxe/src  bin-x86_64-efi/ipxe.efi EMBED=myscript.ipxe EMBED=$PWD/boot.ipxe
+        #working-directory: ./ipxe
+        
+      - name: Move IPXE Resources
+        run: |
+          mkdir out
+          cp ipxe/src/bin-x86_64-efi/ipxe.efi   out/ipxe-x86_64.efi 
+          cp ipxe/src/bin-arm64-efi/ipxe.efi    out/ipxe-aarch64.efi
+
+      - name: "Upload aarch64 assets to S3"
+        uses: oxide-one/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks 
+        env:
+          AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
+          SOURCE_DIR: 'out/'
+          DEST_DIR: 'ipxe'
+
