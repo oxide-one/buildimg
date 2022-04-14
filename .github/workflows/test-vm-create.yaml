@@ -15,17 +15,12 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  DROPLET_NAME: droplet-${ GITHUB_RUN_ID }
-
-
-
 jobs:
   spin-up-droplet:
     name: Spin up Droplet
     uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
     with:
-      name: droplet-${ GITHUB_RUN_ID }
+      name: droplet-${{ github.run_id }}-${{ github.run_number }}
     secrets:
       access-token: ${{ secrets.GITHUB_TOKEN }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
