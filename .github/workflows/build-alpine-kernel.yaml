@@ -12,8 +12,8 @@ on:
     branches: [ main ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -23,7 +23,17 @@ env:
   
 
 jobs:
+  spin-up-droplet:
+    name: Spin up Droplet
+    uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
+    with:
+      name: gha-${{ github.run_id }}-${{ github.run_number }}
+    secrets:
+      access-token: ${{ secrets.GH_PAT }}
+      do-access-token: ${{ secrets.DO_ACCESS_KEY }}
+
   build-x86_64:
+    needs: spin-up-droplet
     runs-on: self-hosted
     #runs-on: ubuntu-latest
     permissions:
@@ -75,6 +85,7 @@ jobs:
           DEST_DIR: 'x86_64'
 
   build-aarch64:
+    needs: spin-up-droplet
     runs-on: self-hosted
     permissions:
       contents: read
@@ -123,7 +134,7 @@ jobs:
           DEST_DIR: 'aarch64'
 
   build-raspberrypi:
-
+    needs: spin-up-droplet
     runs-on: self-hosted
     permissions:
       contents: read
@@ -167,3 +178,17 @@ jobs:
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
           SOURCE_DIR: 'build/'
           DEST_DIR: 'aarch64/'
+
+  tear-down-droplet:
+    needs: 
+    - build-raspberrypi
+    - build-aarch64
+    - build-x86_64
+    name: Spin Down Droplet
+    if: always()
+    uses: oxide-one/workflow-runner-maker/.github/workflows/teardown.yaml@main
+    with:
+      name: gha-${{ github.run_id }}-${{ github.run_number }}
+    secrets:
+      access-token: ${{ secrets.GH_PAT }}
+      do-access-token: ${{ secrets.DO_ACCESS_KEY }}
