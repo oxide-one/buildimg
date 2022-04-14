@@ -25,7 +25,7 @@ env:
 jobs:
   spin-up-droplet:
     name: Spin up Droplet
-    uses: oxide-one/worm/.github/workflows/spinup.yaml@main
+    uses: oxide-one/worm/.github/workflows/spinup.yaml@v1.0.1
     with:
       name: gha-${{ github.run_id }}-${{ github.run_number }}
     secrets:
