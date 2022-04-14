@@ -6,14 +6,10 @@ name: Test VM creation
 # documentation.
 
 on:
-  schedule:
-    - cron: '48 12 * * *'
   push:
     branches: [ main ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   spin-up-droplet:
