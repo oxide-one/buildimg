@@ -24,7 +24,7 @@ jobs:
 
   tear-down-droplet:
     needs: spin-up-droplet
-    name: Spin up Droplet
+    name: Spin Down Droplet
     uses: oxide-one/workflow-runner-maker/.github/workflows/teardown.yaml@main
     with:
       name: gha-${{ github.run_id }}-${{ github.run_number }}
