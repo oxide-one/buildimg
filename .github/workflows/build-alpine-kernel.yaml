@@ -25,7 +25,7 @@ env:
 jobs:
   spin-up-droplet:
     name: Spin up Droplet
-    uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
+    uses: oxide-one/worm/.github/workflows/spinup.yaml@main
     with:
       name: gha-${{ github.run_id }}-${{ github.run_number }}
     secrets:
@@ -186,7 +186,7 @@ jobs:
     - build-x86_64
     name: Spin Down Droplet
     if: always()
-    uses: oxide-one/workflow-runner-maker/.github/workflows/teardown.yaml@main
+    uses: oxide-one/worm/.github/workflows/teardown.yaml@main
     with:
       name: gha-${{ github.run_id }}-${{ github.run_number }}
     secrets:
