@@ -16,17 +16,15 @@ on:
     branches: [ main ]
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  DROPLET_NAME: droplet-${{ env.GITHUB_RUN_ID }}
+
 
 
 jobs:
   call-workflow-passing-data:
     uses: oxide-one/workflow-runner-maker/.github/workflows/spinup.yaml@main
     with:
-      name: test
+      name: ${{ env.DROPLET_NAME }}
     secrets:
       access-token: ${{ secrets.GITHUB_TOKEN }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
