@@ -22,8 +22,33 @@ jobs:
       access-token: ${{ secrets.GH_PAT }}
       do-access-token: ${{ secrets.DO_ACCESS_KEY }}
 
-  tear-down-droplet:
+  test-action:
     needs: spin-up-droplet
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: "Test thing"
+        run: cat /etc/os-release
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: "Byeeee"
+        run: sleep 30
+
+  tear-down-droplet:
+    needs: test-action
     name: Spin Down Droplet
     uses: oxide-one/workflow-runner-maker/.github/workflows/teardown.yaml@main
     with:
