@@ -50,6 +50,7 @@ jobs:
   tear-down-droplet:
     needs: test-action
     name: Spin Down Droplet
+    if: always()
     uses: oxide-one/workflow-runner-maker/.github/workflows/teardown.yaml@main
     with:
       name: gha-${{ github.run_id }}-${{ github.run_number }}
