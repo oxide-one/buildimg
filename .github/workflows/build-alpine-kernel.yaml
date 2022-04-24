@@ -62,8 +62,8 @@ jobs:
           context: .
           file: Alpine.dockerfile
           build-args: |
-            alpine_version=3.15
-            alpine_docker_url=docker.io/library/alpine:3.15
+            alpine_version=edge
+            alpine_docker_url=docker.io/library/alpine:edge
             alpine_flavor=lts virt
             alpine_features=base squashfs network dhcp https
           #platforms: linux/amd64,linux/arm64,linux/ppc64le
@@ -111,8 +111,8 @@ jobs:
           context: .
           file: Alpine.dockerfile
           build-args: |
-            alpine_version=3.15
-            alpine_docker_url=docker.io/library/alpine:3.15
+            alpine_version=edge
+            alpine_docker_url=docker.io/library/alpine:edge
             alpine_flavor=rpi lts virt rpi4
             alpine_features=rpi base squashfs network dhcp https
           #platforms: linux/amd64,linux/arm64,linux/ppc64le
@@ -161,8 +161,8 @@ jobs:
           file: Raspberrypi.dockerfile
           platforms: linux/arm64
           build-args: |
-            alpine_version=3.15
-            alpine_docker_url=docker.io/library/alpine:3.15
+            alpine_version=edge
+            alpine_docker_url=docker.io/library/alpine:edge
           outputs: |
             build
           tags: alpine-kernel
