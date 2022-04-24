@@ -17,7 +17,7 @@ RUN apk update
 # Download dependencies
 RUN apk add alpine-sdk build-base apk-tools alpine-conf busybox fakeroot xz-dev mkinitfs
 
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/main\nhttps://dl-cdn.alpinelinux.org/alpine/v${alpine_version}/community" > /tmp/repositories
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/${alpine_version}/main\nhttps://dl-cdn.alpinelinux.org/alpine/${alpine_version}/community" > /tmp/repositories
 
 RUN cat /tmp/repositories
 COPY initramfs-init /usr/share/mkinitfs/initramfs-init
