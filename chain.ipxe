@@ -1,0 +1,3 @@
+dhcp
+ntp 0.uk.pool.ntp.org
+chain https://kernel.oxidecdn.one/boot.ipxe
