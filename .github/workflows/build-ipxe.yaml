@@ -50,7 +50,7 @@ jobs:
         run: sed -i -e "s/\/\/\#define NTP_CMD/#define NTP_CMD/"  ipxe/src/config/general.h
         
       - name: Enable HTTPS
-        run: sed -i -e "/DOWNLOAD_PROTO_HTTPS/c #define DOWNLOAD_PROTO_HTTPS" ipxe/src/config/general.h
+        run: sed -i -e 's/.*DOWNLOAD_PROTO_HTTPS.*/#define DOWNLOAD_PROTO_HTTPS/' ipxe/src/config/general.h
         
       - name: Compile ipxe for ARM
         run: make -j$(nproc) -C ipxe/src  CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/chain.ipxe
