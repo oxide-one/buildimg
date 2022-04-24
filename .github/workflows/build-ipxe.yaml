@@ -47,7 +47,7 @@ jobs:
         run: sudo apt install -y -o Acquire::Retries=50 mtools syslinux isolinux gcc-aarch64-linux-gnu make
         
       - name: Compile ipxe for ARM
-        run: make -j$(nproc) -C ipxe/src  CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/chain.ipxe
+        run: make -j$(nproc) -C ipxe/src  CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/chain.ipxe
         #working-directory: ./ipxe
         
       - name: Compile ipxe for ARM
