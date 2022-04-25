@@ -10,7 +10,7 @@ cpuid --ext 29 && goto x86_64 || goto x86
 :arm64
 set arch aarch64 ||
 set acpi acpi=force ||
-set console ttyAMA0 ||
+set console ||
 set ipaddr ip=dhcp ||
 set cmdline ${acpi} ${console} ${ipaddr}
 set flavor lts
