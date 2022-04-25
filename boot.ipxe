@@ -13,7 +13,7 @@ set acpi acpi=force ||
 set console ||
 set ipaddr ip=dhcp ||
 set cmdline ${acpi} ${console} ${ipaddr}
-set flavor lts
+set flavor rpi4
 goto run
 
 :x86_64
