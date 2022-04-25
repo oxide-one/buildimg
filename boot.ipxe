@@ -50,6 +50,6 @@ set vmlinuz-url     ${img-url}/${arch}/vmlinuz-${flavor}
  echo WELCOME TO OXIDE ONE
 
 imgfree
-kernel ${vmlinuz-url} alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor}
+kernel ${vmlinuz-url} alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor} ${cmdline}
 initrd ${initramfs-url}
 boot
