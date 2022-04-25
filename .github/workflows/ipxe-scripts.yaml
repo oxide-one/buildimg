@@ -1,0 +1,52 @@
+name: IPXE Scripts
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '48 12 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  
+
+jobs:
+
+  upload-ipxe-script:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+  
+      - name: "Make new Directory"
+        run: mkdir out
+      - name: "Move file to new directory"
+        run: mv ./boot.ipxe out
+        
+      - name: "Upload IPXE Scripts to S3"
+        uses: oxide-one/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks 
+        env:
+          AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
+          SOURCE_DIR: 'out/'
+          DEST_DIR: '/'
