@@ -53,10 +53,10 @@ jobs:
         run: sed -i -e 's/.*DOWNLOAD_PROTO_HTTPS.*/#define DOWNLOAD_PROTO_HTTPS/' ipxe/src/config/general.h
         
       - name: Compile ipxe for ARM
-        run: make -j$(nproc) -C ipxe/src  CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/chain.ipxe
+        run: make -j$(nproc) -C ipxe/src  DEBUG=tls CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CROSS=aarch64-linux-gnu- bin-arm64-efi/ipxe.efi EMBED=$PWD/chain.ipxe
         #working-directory: ./ipxe
         
-      - name: Compile ipxe for ARM
+      - name: Compile ipxe for x86_64
         run: make -j$(nproc) -C ipxe/src  bin-x86_64-efi/ipxe.efi EMBED=myscript.ipxe EMBED=$PWD/chain.ipxe
         #working-directory: ./ipxe
         
