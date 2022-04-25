@@ -1,7 +1,7 @@
 #!ipxe
 set os Alpine Linux
 set img-url http://kernel.oxidecdn.one
-set branch v3.15 ||
+set branch edge ||
 set flavor lts ||
 
 iseq ${buildarch} arm64 && goto arm64 ||
