@@ -49,4 +49,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://${{ secrets.BUCKET_ENDPOINT }}"
           SOURCE_DIR: 'out/'
-          DEST_DIR: '/'
