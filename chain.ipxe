@@ -1,6 +1,4 @@
 #!ipxe
 dhcp
-echo "SETTING DATE"
 ntp pool.ntp.org
-echo "DATE SET"
-chain https://kernel.oxidecdn.one/boot.ipxe
+chain http://kernel.oxidecdn.one/boot.ipxe
