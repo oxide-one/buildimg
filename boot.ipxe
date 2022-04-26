@@ -47,6 +47,7 @@ set vmlinuz-url     ${img-url}/${arch}/vmlinuz-${flavor}
  echo IPv6 DNS: ${dns6}
  echo Domain: ${domain}
  echo ========================================================
+ echo Extra magix: ${64:string}
  echo WELCOME TO OXIDE ONE
 
 imgfree
