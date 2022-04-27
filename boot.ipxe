@@ -52,6 +52,6 @@ set apkovl-url      ${64:string}/{MAC}.apkovl.tar.gz
  echo WELCOME TO OXIDE ONE
 
 imgfree
-kernel ${vmlinuz-url} alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor} ${cmdline}
+kernel ${vmlinuz-url} alpine_repo=${repo-url} modloop=${modloop-url} initrd=initramfs-${flavor} apkovl=${apkovl-url} ${cmdline}
 initrd ${initramfs-url}
 boot
