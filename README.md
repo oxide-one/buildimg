@@ -1,2 +1,2 @@
-# buildimg
+# buildimg [![Alpine Linux](https://github.com/oxide-one/buildimg/actions/workflows/build-alpine-kernel.yaml/badge.svg)](https://github.com/oxide-one/buildimg/actions/workflows/build-alpine-kernel.yaml) [![IPXE](https://github.com/oxide-one/buildimg/actions/workflows/build-ipxe.yaml/badge.svg)](https://github.com/oxide-one/buildimg/actions/workflows/build-ipxe.yaml) [![IPXE Scripts](https://github.com/oxide-one/buildimg/actions/workflows/ipxe-scripts.yaml/badge.svg)](https://github.com/oxide-one/buildimg/actions/workflows/ipxe-scripts.yaml)
 Image building configuration and IPXE for oxide-one
