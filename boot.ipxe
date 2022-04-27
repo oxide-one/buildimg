@@ -30,6 +30,7 @@ set repo-url  http://dl-cdn.alpinelinux.org/alpine/${branch}/main
 set modloop-url     ${img-url}/${arch}/modloop-${flavor}
 set initramfs-url   ${img-url}/${arch}/initramfs-${flavor}
 set vmlinuz-url     ${img-url}/${arch}/vmlinuz-${flavor}
+set apkovl-url      ${64:string}/{MAC}.apkovl.tar.gz
 
  echo ========================================================
  echo UUID: ${uuid}
